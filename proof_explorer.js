@@ -558,71 +558,27 @@ class SpectrumVisualization {
         ctx.fillText(`Spectral Gap Δ = ${SPECTRAL_GAP}`, 50, canvas.height - 10);
     }
 
-    for(let n = 0; n <this.count; n++) {
-    // P-class eigenvalues
-    const lambda_p_n = PI_10 / ALPHA_P + n * 0.01;
-    const x_p = centerX - 200 + Math.cos(this.angle + n * 0.1) * 50;
-    const y_p = centerY - lambda_p_n * scale;
-
-    ctx.fillStyle = '#00ff00';
-    ctx.beginPath();
-    ctx.arc(x_p, y_p, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // NP-class eigenvalues
-    const lambda_np_n = PI_10 / ALPHA_NP + n * 0.01;
-    const x_np = centerX + 200 + Math.cos(this.angle + n * 0.1) * 50;
-    const y_np = centerY - lambda_np_n * scale;
-
-    ctx.fillStyle = '#ff0000';
-    ctx.beginPath();
-    ctx.arc(x_np, y_np, 3, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-// Labels
-ctx.fillStyle = '#00ff00';
-ctx.font = '16px Courier New';
-ctx.fillText('H_P Spectrum', centerX - 250, centerY + 200);
-
-ctx.fillStyle = '#ff0000';
-ctx.fillText('H_NP Spectrum', centerX + 150, centerY + 200);
-
-// Gap indicator
-ctx.strokeStyle = '#ffff00';
-ctx.setLineDash([5, 5]);
-ctx.lineWidth = 2;
-ctx.beginPath();
-ctx.moveTo(centerX - 100, centerY);
-ctx.lineTo(centerX + 100, centerY);
-ctx.stroke();
-ctx.setLineDash([]);
-
-ctx.fillStyle = '#ffff00';
-ctx.fillText('Spectral Gap Δ', centerX - 50, centerY - 10);
+    rotate() {
+        this.rotating = true;
+        this.animateRotation();
     }
 
-rotate() {
-    this.rotating = true;
-    this.animateRotation();
-}
+    stop() {
+        this.rotating = false;
+    }
 
-stop() {
-    this.rotating = false;
-}
+    reset() {
+        this.angle = 0;
+        this.rotating = false;
+        this.render();
+    }
 
-reset() {
-    this.angle = 0;
-    this.rotating = false;
-    this.render();
-}
-
-animateRotation() {
-    if (!this.rotating) return;
-    this.angle += 0.02;
-    this.render();
-    requestAnimationFrame(() => this.animateRotation());
-}
+    animateRotation() {
+        if (!this.rotating) return;
+        this.angle += 0.02;
+        this.render();
+        requestAnimationFrame(() => this.animateRotation());
+    }
 }
 
 // ==============================================================================
