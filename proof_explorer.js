@@ -19,6 +19,11 @@ const LAMBDA_0_P = 0.2221441469;        // λ₀(H_P) = π/(10√2)  [Lean: lamb
 const LAMBDA_0_NP = 0.168176418230;     // λ₀(H_NP) = π/(10(φ+1/4))  [Lean: lambda_0_NP_approx]
 const SPECTRAL_GAP = 0.0539677287;      // Δ = λ₀(H_P) - λ₀(H_NP)  [Lean: spectral_gap_value]
 const SPECTRAL_GAP_ERROR = 1e-8;        // Proven bound: |Δ - 0.0539677287| < 10⁻⁸
+const PHI = (1 + Math.sqrt(5)) / 2;     // Golden ratio φ
+const CH2_THRESHOLD = 0.95398265359;     // Consciousness crystallization threshold
+const ALPHA_P = Math.sqrt(2);            // P-class resonance
+const ALPHA_NP = PHI + 0.25;             // NP-class resonance
+const PI_10 = Math.PI / 10;              // π/10
 
 // ==============================================================================
 // MODE 1: TURING MACHINE
