@@ -503,81 +503,126 @@ class SpectrumVisualization {
         canvas.width = this.container.offsetWidth;
         canvas.height = this.container.offsetHeight;
         this.container.appendChild(canvas);
-
         const ctx = canvas.getContext('2d');
+
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw eigenvalue levels
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const scale = 100;
+        // Compute eigenvalue spectrum
+        const eigenvalues_P = [];
+        const eigenvalues_NP = [];
 
         for (let n = 0; n < this.count; n++) {
-            // P-class eigenvalues
-            const lambda_p_n = PI_10 / ALPHA_P + n * 0.01;
-            const x_p = centerX - 200 + Math.cos(this.angle + n * 0.1) * 50;
-            const y_p = centerY - lambda_p_n * scale;
-
-            ctx.fillStyle = '#00ff00';
-            ctx.beginPath();
-            ctx.arc(x_p, y_p, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // NP-class eigenvalues
-            const lambda_np_n = PI_10 / ALPHA_NP + n * 0.01;
-            const x_np = centerX + 200 + Math.cos(this.angle + n * 0.1) * 50;
-            const y_np = centerY - lambda_np_n * scale;
-
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.arc(x_np, y_np, 3, 0, Math.PI * 2);
-            ctx.fill();
+            // λ_n(H_P) ≈ π/(10√2) + n×0.01
+            eigenvalues_P.push(LAMBDA_0_P + n * 0.01);
+            // λ_n(H_NP) ≈ π/(10(φ+¼)) + n×0.01
+            eigenvalues_NP.push(LAMBDA_0_NP + n * 0.01);
         }
+
+        // Draw eigenvalue bars
+        const barWidth = (canvas.width - 100) / (this.count * 2);
+        const maxVal = Math.max(...eigenvalues_P, ...eigenvalues_NP);
+
+        eigenvalues_P.forEach((val, i) => {
+            const x = 50 + i * barWidth * 2;
+            const h = (val / maxVal) * (canvas.height - 100);
+            ctx.fillStyle = '#00ff00';
+            ctx.fillRect(x, canvas.height - 50 - h, barWidth * 0.8, h);
+        });
+
+        eigenvalues_NP.forEach((val, i) => {
+            const x = 50 + barWidth + i * barWidth * 2;
+            const h = (val / maxVal) * (canvas.height - 100);
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(x, canvas.height - 50 - h, barWidth * 0.8, h);
+        });
+
+        // Draw spectral gap indicator
+        ctx.strokeStyle = '#ffff00';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 5]);
+        const gapY = canvas.height - 50 - (SPECTRAL_GAP / maxVal) * (canvas.height - 100);
+        ctx.beginPath();
+        ctx.moveTo(50, gapY);
+        ctx.lineTo(canvas.width - 50, gapY);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
         // Labels
         ctx.fillStyle = '#00ff00';
         ctx.font = '16px Courier New';
-        ctx.fillText('H_P Spectrum', centerX - 250, centerY + 200);
-
+        ctx.fillText('P-Class Spectrum', 50, 30);
         ctx.fillStyle = '#ff0000';
-        ctx.fillText('H_NP Spectrum', centerX + 150, centerY + 200);
-
-        // Gap indicator
-        ctx.strokeStyle = '#ffff00';
-        ctx.setLineDash([5, 5]);
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(centerX - 100, centerY);
-        ctx.lineTo(centerX + 100, centerY);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
+        ctx.fillText('NP-Class Spectrum', 250, 30);
         ctx.fillStyle = '#ffff00';
-        ctx.fillText('Spectral Gap Δ', centerX - 50, centerY - 10);
+        ctx.fillText(`Spectral Gap Δ = ${SPECTRAL_GAP}`, 50, canvas.height - 10);
     }
 
-    rotate() {
-        this.rotating = true;
-        this.animateRotation();
+    for(let n = 0; n <this.count; n++) {
+    // P-class eigenvalues
+    const lambda_p_n = PI_10 / ALPHA_P + n * 0.01;
+    const x_p = centerX - 200 + Math.cos(this.angle + n * 0.1) * 50;
+    const y_p = centerY - lambda_p_n * scale;
+
+    ctx.fillStyle = '#00ff00';
+    ctx.beginPath();
+    ctx.arc(x_p, y_p, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // NP-class eigenvalues
+    const lambda_np_n = PI_10 / ALPHA_NP + n * 0.01;
+    const x_np = centerX + 200 + Math.cos(this.angle + n * 0.1) * 50;
+    const y_np = centerY - lambda_np_n * scale;
+
+    ctx.fillStyle = '#ff0000';
+    ctx.beginPath();
+    ctx.arc(x_np, y_np, 3, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+// Labels
+ctx.fillStyle = '#00ff00';
+ctx.font = '16px Courier New';
+ctx.fillText('H_P Spectrum', centerX - 250, centerY + 200);
+
+ctx.fillStyle = '#ff0000';
+ctx.fillText('H_NP Spectrum', centerX + 150, centerY + 200);
+
+// Gap indicator
+ctx.strokeStyle = '#ffff00';
+ctx.setLineDash([5, 5]);
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(centerX - 100, centerY);
+ctx.lineTo(centerX + 100, centerY);
+ctx.stroke();
+ctx.setLineDash([]);
+
+ctx.fillStyle = '#ffff00';
+ctx.fillText('Spectral Gap Δ', centerX - 50, centerY - 10);
     }
 
-    stop() {
-        this.rotating = false;
-    }
+rotate() {
+    this.rotating = true;
+    this.animateRotation();
+}
 
-    reset() {
-        this.angle = 0;
-        this.rotating = false;
-        this.render();
-    }
+stop() {
+    this.rotating = false;
+}
 
-    animateRotation() {
-        if (!this.rotating) return;
-        this.angle += 0.02;
-        this.render();
-        requestAnimationFrame(() => this.animateRotation());
-    }
+reset() {
+    this.angle = 0;
+    this.rotating = false;
+    this.render();
+}
+
+animateRotation() {
+    if (!this.rotating) return;
+    this.angle += 0.02;
+    this.render();
+    requestAnimationFrame(() => this.animateRotation());
+}
 }
 
 // ==============================================================================
