@@ -1,0 +1,46 @@
+DEPLOYING TURING MACHINE DEMO - 3 STEPS
+==========================================
+
+STEP 1: CREATE GITHUB REPO
+---------------------------
+I just opened https://github.com/new in your browser.
+
+Fill in:
+- Repository name: Turing-Machine-Demo
+- Description: Interactive visualization of P ≠ NP proof via spectral gap separation
+- Public: YES (check the box)
+- DO NOT initialize with README (we already have one)
+
+Click "Create repository"
+
+
+STEP 2: PUSH CODE
+-----------------
+After creating the repo, run these commands in PowerShell:
+
+cd H:\OneDrive\Documents\Turing-Machine-Demo
+git remote add origin https://github.com/FractalDevTeam/Turing-Machine-Demo.git
+git branch -M main
+git push -u origin main
+
+
+STEP 3: ENABLE GITHUB PAGES
+----------------------------
+1. Go to: https://github.com/FractalDevTeam/Turing-Machine-Demo/settings/pages
+2. Under "Source", select "Deploy from a branch"
+3. Under "Branch", select "main" and folder "/ (root)"
+4. Click Save
+
+
+DONE! YOUR SITE WILL BE LIVE AT:
+https://fractaldevteam.github.io/Turing-Machine-Demo/
+
+Refresh after 30 seconds and you'll see your Turing machine!
+
+
+FILES INCLUDED:
+- index.html = Main Turing machine demo
+- turing_machine_advanced.html = 7-mode explorer
+- network.html = Network visualization
+- proof_explorer.js = JavaScript
+- README.md = Documentation

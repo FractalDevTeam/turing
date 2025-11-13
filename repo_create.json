@@ -1,0 +1,6 @@
+{
+    "name": "Turing-Machine-Demo",
+    "description": "Interactive visualization of P ≠ NP proof via spectral gap separation. Turing machine encoding, digital sum, eigenvalue computation.",
+    "homepage": "https://fractaldevteam.github.io/Turing-Machine-Demo",
+    "public": true
+}
