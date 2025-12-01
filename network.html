@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Principia Fractalis - Millennium Problems Network</title>
     <style>
         * {
@@ -13,9 +14,9 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: #000;
-            color: #00ff00;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1e1b4b;
+            color: #a78bfa;
             overflow: hidden;
         }
 
@@ -33,29 +34,29 @@
             z-index: 100;
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             border-radius: 10px;
         }
 
         h1 {
             font-size: 1.8em;
-            color: #00ff00;
+            color: #a78bfa;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px #00ff00;
+            text-shadow: 0 0 10px #a78bfa;
         }
 
         .subtitle {
             font-size: 0.9em;
-            color: #00aa00;
+            color: #7c3aed;
         }
 
         .legend {
             position: absolute;
             top: 150px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(30, 27, 75, 0.95);
             padding: 20px;
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             border-radius: 10px;
             max-width: 300px;
             z-index: 100;
@@ -100,7 +101,7 @@
         }
 
         .tooltip p {
-            color: #00ff00;
+            color: #a78bfa;
             margin: 5px 0;
             font-size: 0.9em;
             line-height: 1.4;
@@ -110,9 +111,9 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(30, 27, 75, 0.95);
             padding: 15px;
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             border-radius: 10px;
             z-index: 100;
         }
@@ -171,7 +172,7 @@
             <span>P ≠ NP (Verified)</span>
         </div>
         <div class="legend-item">
-            <div class="legend-color" style="background: #00ff00;"></div>
+            <div class="legend-color" style="background: #a78bfa;"></div>
             <span>Proven Problems</span>
         </div>
         <div class="legend-item">
@@ -182,8 +183,8 @@
             <div class="legend-color" style="background: #ffff00;"></div>
             <span>Connected (Perelman)</span>
         </div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #00ff00;">
-            <p style="font-size: 0.85em; color: #00aa00;">
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #a78bfa;">
+            <p style="font-size: 0.85em; color: #7c3aed;">
                 <strong>Node Size:</strong> Verification strength<br>
                 <strong>Gold Border:</strong> Formally verified<br>
                 <strong>Links:</strong> Framework connections<br>
@@ -241,7 +242,7 @@
                 name: 'Riemann\nHypothesis',
                 type: 'proven',
                 size: 30,
-                color: '#00ff00',
+                color: '#a78bfa',
                 verified: false,
                 metrics: {
                     'Status': 'PROVEN',
@@ -257,7 +258,7 @@
                 name: 'Yang-Mills\nMass Gap',
                 type: 'proven',
                 size: 28,
-                color: '#00ff00',
+                color: '#a78bfa',
                 verified: false,
                 metrics: {
                     'Status': 'PROVEN',
@@ -273,7 +274,7 @@
                 name: 'Birch-Swinnerton\n-Dyer',
                 type: 'proven',
                 size: 28,
-                color: '#00ff00',
+                color: '#a78bfa',
                 verified: false,
                 metrics: {
                     'Status': 'PROVEN',
@@ -289,7 +290,7 @@
                 name: 'Hodge\nConjecture',
                 type: 'proven',
                 size: 26,
-                color: '#00ff00',
+                color: '#a78bfa',
                 verified: false,
                 metrics: {
                     'Status': 'PROVEN',
@@ -305,7 +306,7 @@
                 name: 'Navier-Stokes',
                 type: 'proven',
                 size: 28,
-                color: '#00ff00',
+                color: '#a78bfa',
                 verified: false,
                 metrics: {
                     'Status': 'PROVEN',
@@ -336,17 +337,17 @@
 
         const links = [
             { source: 'consciousness', target: 'pnp', strength: 1.0, color: '#ff0000' },
-            { source: 'consciousness', target: 'riemann', strength: 0.95, color: '#00ff00' },
-            { source: 'consciousness', target: 'yangmills', strength: 0.9, color: '#00ff00' },
-            { source: 'consciousness', target: 'bsd', strength: 0.9, color: '#00ff00' },
-            { source: 'consciousness', target: 'hodge', strength: 0.85, color: '#00ff00' },
-            { source: 'consciousness', target: 'navier', strength: 0.9, color: '#00ff00' },
+            { source: 'consciousness', target: 'riemann', strength: 0.95, color: '#a78bfa' },
+            { source: 'consciousness', target: 'yangmills', strength: 0.9, color: '#a78bfa' },
+            { source: 'consciousness', target: 'bsd', strength: 0.9, color: '#a78bfa' },
+            { source: 'consciousness', target: 'hodge', strength: 0.85, color: '#a78bfa' },
+            { source: 'consciousness', target: 'navier', strength: 0.9, color: '#a78bfa' },
             { source: 'consciousness', target: 'poincare', strength: 0.7, color: '#ffff00' },
-            { source: 'pnp', target: 'riemann', strength: 0.6, color: '#00aa00' },
-            { source: 'riemann', target: 'bsd', strength: 0.8, color: '#00aa00' },
-            { source: 'yangmills', target: 'navier', strength: 0.7, color: '#00aa00' },
-            { source: 'hodge', target: 'bsd', strength: 0.6, color: '#00aa00' },
-            { source: 'poincare', target: 'navier', strength: 0.5, color: '#00aa00' }
+            { source: 'pnp', target: 'riemann', strength: 0.6, color: '#7c3aed' },
+            { source: 'riemann', target: 'bsd', strength: 0.8, color: '#7c3aed' },
+            { source: 'yangmills', target: 'navier', strength: 0.7, color: '#7c3aed' },
+            { source: 'hodge', target: 'bsd', strength: 0.6, color: '#7c3aed' },
+            { source: 'poincare', target: 'navier', strength: 0.5, color: '#7c3aed' }
         ];
 
         // SVG setup
@@ -467,7 +468,7 @@
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 text.setAttribute('text-anchor', 'middle');
                 text.setAttribute('dy', node.size + 20);
-                text.setAttribute('fill', '#00ff00');
+                text.setAttribute('fill', '#a78bfa');
                 text.setAttribute('font-size', '12px');
                 text.setAttribute('class', 'node-label');
                 node.name.split('\n').forEach((line, i) => {
@@ -496,7 +497,7 @@
             const tooltip = document.getElementById('tooltip');
             let html = `<h4>${node.name.replace('\n', ' ')}</h4>`;
             html += `<p>${node.description}</p>`;
-            html += '<p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #00ff00;">';
+            html += '<p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #a78bfa;">';
             for (const [key, value] of Object.entries(node.metrics)) {
                 html += `<strong>${key}:</strong> ${value}<br>`;
             }

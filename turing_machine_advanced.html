@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P ≠ NP: ULTIMATE INTERACTIVE PROOF EXPLORER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>P ≠ NP: Interactive Proof Explorer — Principia Fractalis</title>
     <style>
         * {
             margin: 0;
@@ -13,16 +14,16 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: #000;
-            color: #00ff00;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1e1b4b;
+            color: #a78bfa;
             overflow-x: hidden;
         }
 
         /* Navigation */
         .nav-bar {
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 2px solid #00ff00;
+            background: rgba(30, 27, 75, 0.95);
+            border-bottom: 2px solid #a78bfa;
             padding: 15px;
             position: sticky;
             top: 0;
@@ -36,7 +37,7 @@
         .nav-title {
             font-size: 1.5em;
             font-weight: bold;
-            text-shadow: 0 0 10px #00ff00;
+            text-shadow: 0 0 10px #a78bfa;
         }
 
         .nav-tabs {
@@ -45,23 +46,23 @@
         }
 
         .tab-btn {
-            background: rgba(0, 255, 0, 0.1);
-            border: 2px solid #00ff00;
-            color: #00ff00;
+            background: rgba(167, 139, 250, 0.1);
+            border: 2px solid #a78bfa;
+            color: #a78bfa;
             padding: 10px 20px;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: 'Courier New', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-weight: bold;
         }
 
         .tab-btn:hover {
-            background: rgba(0, 255, 0, 0.3);
-            box-shadow: 0 0 15px #00ff00;
+            background: rgba(167, 139, 250, 0.3);
+            box-shadow: 0 0 15px #a78bfa;
         }
 
         .tab-btn.active {
-            background: #00ff00;
+            background: #a78bfa;
             color: #000;
         }
 
@@ -83,11 +84,11 @@
 
         /* Canvas */
         canvas {
-            border: 2px solid #00ff00;
-            background: #000;
+            border: 2px solid #a78bfa;
+            background: #1e1b4b;
             display: block;
             margin: 20px auto;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
         }
 
         /* Consciousness Field Visualization */
@@ -95,8 +96,8 @@
             position: relative;
             width: 100%;
             height: 600px;
-            background: radial-gradient(circle at center, #001a00 0%, #000 100%);
-            border: 2px solid #00ff00;
+            background: radial-gradient(circle at center, #2d1b4e 0%, #000 100%);
+            border: 2px solid #a78bfa;
             border-radius: 10px;
             overflow: hidden;
         }
@@ -110,7 +111,7 @@
         /* Stats Panel */
         .stats-panel {
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
@@ -123,20 +124,20 @@
         }
 
         .stat-box {
-            background: rgba(0, 100, 0, 0.2);
+            background: rgba(124, 58, 237, 0.2);
             padding: 15px;
-            border-left: 3px solid #00ff00;
+            border-left: 3px solid #a78bfa;
             border-radius: 5px;
         }
 
         .stat-label {
-            color: #00aa00;
+            color: #7c3aed;
             font-size: 0.9em;
             margin-bottom: 5px;
         }
 
         .stat-value {
-            color: #00ff00;
+            color: #a78bfa;
             font-size: 1.5em;
             font-weight: bold;
         }
@@ -161,7 +162,7 @@
 
         .oracle-test {
             background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             border-radius: 10px;
             padding: 20px;
         }
@@ -172,7 +173,7 @@
         }
 
         .oracle-test.complete {
-            border-color: #00ff00;
+            border-color: #a78bfa;
         }
 
         .oracle-header {
@@ -182,7 +183,7 @@
         }
 
         .oracle-result {
-            background: rgba(0, 100, 0, 0.3);
+            background: rgba(124, 58, 237, 0.3);
             padding: 15px;
             border-radius: 5px;
             margin-top: 10px;
@@ -198,24 +199,24 @@
 
         .test-cell {
             aspect-ratio: 1;
-            border: 1px solid #00ff00;
+            border: 1px solid #a78bfa;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.8em;
-            background: rgba(0, 50, 0, 0.2);
+            background: rgba(91, 33, 182, 0.2);
             transition: all 0.3s;
             cursor: pointer;
         }
 
         .test-cell:hover {
-            background: rgba(0, 100, 0, 0.4);
+            background: rgba(124, 58, 237, 0.4);
             transform: scale(1.05);
         }
 
         .test-cell.verified {
-            background: rgba(0, 255, 0, 0.3);
-            border-color: #00ff00;
+            background: rgba(167, 139, 250, 0.3);
+            border-color: #a78bfa;
         }
 
         .test-cell.running {
@@ -227,7 +228,7 @@
         /* Controls */
         .control-panel {
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
@@ -242,7 +243,7 @@
         }
 
         button {
-            background: #00ff00;
+            background: #a78bfa;
             color: #000;
             border: none;
             padding: 12px 24px;
@@ -251,12 +252,12 @@
             cursor: pointer;
             border-radius: 5px;
             transition: all 0.3s;
-            font-family: 'Courier New', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         button:hover {
-            background: #00aa00;
-            box-shadow: 0 0 15px #00ff00;
+            background: #7c3aed;
+            box-shadow: 0 0 15px #a78bfa;
             transform: translateY(-2px);
         }
 
@@ -280,11 +281,11 @@
 
         input[type="range"] {
             width: 200px;
-            accent-color: #00ff00;
+            accent-color: #a78bfa;
         }
 
         label {
-            color: #00aa00;
+            color: #7c3aed;
             margin-right: 10px;
         }
 
@@ -292,7 +293,7 @@
         #spectrum-3d {
             width: 100%;
             height: 500px;
-            background: linear-gradient(135deg, #000 0%, #001a00 100%);
+            background: linear-gradient(135deg, #000 0%, #2d1b4e 100%);
         }
 
         /* Fractal Canvas */
@@ -305,23 +306,23 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(30, 27, 75, 0.95);
             padding: 15px;
-            border: 2px solid #00ff00;
+            border: 2px solid #a78bfa;
             border-radius: 5px;
         }
 
         /* Info Display */
         .info-display {
-            background: rgba(0, 100, 0, 0.2);
-            border-left: 3px solid #00ff00;
+            background: rgba(124, 58, 237, 0.2);
+            border-left: 3px solid #a78bfa;
             padding: 15px;
             margin: 15px 0;
             border-radius: 5px;
         }
 
         .info-display pre {
-            color: #00ff00;
+            color: #a78bfa;
             overflow-x: auto;
         }
 
@@ -352,11 +353,11 @@
 
             0%,
             100% {
-                box-shadow: 0 0 5px #00ff00;
+                box-shadow: 0 0 5px #a78bfa;
             }
 
             50% {
-                box-shadow: 0 0 20px #00ff00;
+                box-shadow: 0 0 20px #a78bfa;
             }
         }
 
@@ -375,8 +376,8 @@
         }
 
         .comparison-panel.p-class {
-            border-color: #00ff00;
-            background: rgba(0, 255, 0, 0.05);
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.05);
         }
 
         .comparison-panel.np-class {
@@ -392,8 +393,8 @@
         .progress-bar {
             width: 100%;
             height: 30px;
-            background: rgba(0, 50, 0, 0.5);
-            border: 2px solid #00ff00;
+            background: rgba(91, 33, 182, 0.5);
+            border: 2px solid #a78bfa;
             border-radius: 5px;
             overflow: hidden;
             margin: 10px 0;
@@ -401,7 +402,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00ff00 0%, #00aa00 100%);
+            background: linear-gradient(90deg, #a78bfa 0%, #7c3aed 100%);
             transition: width 0.3s;
             display: flex;
             align-items: center;
@@ -412,14 +413,14 @@
 
         /* Log Display */
         .log-display {
-            background: #000;
-            border: 2px solid #00ff00;
+            background: #1e1b4b;
+            border: 2px solid #a78bfa;
             padding: 15px;
             border-radius: 5px;
             max-height: 300px;
             overflow-y: auto;
             font-size: 0.9em;
-            font-family: 'Courier New', monospace;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .log-entry {
@@ -428,7 +429,7 @@
         }
 
         .log-entry.success {
-            color: #00ff00;
+            color: #a78bfa;
         }
 
         .log-entry.warning {
@@ -697,7 +698,7 @@
 
                 <div class="comparison-grid">
                     <div class="comparison-panel p-class">
-                        <h3 style="color: #00ff00;">P-CLASS (Deterministic)</h3>
+                        <h3 style="color: #a78bfa;">P-CLASS (Deterministic)</h3>
                         <canvas id="compare-p-canvas" width="600" height="500"></canvas>
                         <div class="info-display">
                             <strong>Properties:</strong><br>
