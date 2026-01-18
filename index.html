@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P ≠ NP: Interactive Proof Explorer — Principia Fractalis</title>
+    <title>P vs NP: Spectral Analysis Explorer — Principia Fractalis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -142,16 +142,19 @@
             color: #a78bfa;
             font-size: 1.5em;
             font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .stat-value.critical {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .stat-value.golden {
             color: #ffd700;
-            text-shadow: 0 0 10px #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         /* Oracle Test Panel */
@@ -446,7 +449,7 @@
 
 <body>
     <nav class="nav-bar">
-        <div class="nav-title">🔬 P ≠ NP: ULTIMATE PROOF EXPLORER 🔬</div>
+        <div class="nav-title">Principia Fractalis — P vs NP Spectral Analysis</div>
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchMode('turing')">Turing Machine</button>
             <button class="tab-btn" onclick="switchMode('consciousness')">Consciousness Field</button>
@@ -461,7 +464,11 @@
     <!-- MODE 1: Turing Machine -->
     <div id="turing" class="mode active">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🖥️ TURING MACHINE → SPECTRAL GAP</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Turing Machine Configuration Encoding</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Every Turing machine configuration can be encoded as a natural number using prime factorization.
+                This encoding reveals structural properties through the base-3 digital sum function D₃(n).
+            </p>
 
             <div class="stats-panel">
                 <div class="stat-grid">
@@ -510,7 +517,11 @@
     <!-- MODE 2: Consciousness Field -->
     <div id="consciousness" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🧠 CONSCIOUSNESS FIELD VISUALIZATION</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Coherence Threshold Visualization</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The CH₂ metric measures computational coherence. P-class problems cluster below the threshold,
+                while NP-complete problems exhibit elevated coherence values, suggesting structural separation.
+            </p>
 
             <div class="stats-panel">
                 <div class="stat-grid">
@@ -559,12 +570,16 @@
     <!-- MODE 3: Oracle Tests -->
     <div id="oracle" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🔮 ORACLE SEPARATION TESTS</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Oracle Independence Analysis</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The Baker-Gill-Solovay theorem (1975) showed that relativizing proofs cannot resolve P vs NP.
+                This analysis explores whether the digital sum function exhibits oracle-independent properties.
+            </p>
 
             <div class="info-display">
-                <strong>Baker-Gill-Solovay Relativization Barrier</strong><br>
-                Our proof circumvents this because D₃(n^A) = D₃(n) for all oracles A.<br>
-                The digital sum is oracle-independent → spectral gap persists: Δ^A = Δ
+                <strong>Relativization Barrier Context</strong><br>
+                The key observation: if D₃(n^A) = D₃(n) for all oracles A, then any spectral gap
+                derived from D₃ would be oracle-independent, potentially circumventing relativization.
             </div>
 
             <div class="control-panel">
@@ -581,7 +596,11 @@
     <!-- MODE 4: Fractal Structure -->
     <div id="fractal" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🌀 BASE-3 FRACTAL STRUCTURE</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Base-3 Digital Sum Fractal</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The digital sum function D₃(n) exhibits self-similar structure at all scales.
+                This fractal property is key to understanding why the analysis may be non-relativizing.
+            </p>
 
             <div class="fractal-container">
                 <canvas id="fractal-canvas" width="1400" height="800"></canvas>
@@ -611,7 +630,11 @@
     <!-- MODE 5: 3D Spectrum -->
     <div id="spectrum" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">📊 3D EIGENVALUE SPECTRUM</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Eigenvalue Spectrum Visualization</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The spectral gap Δ between P-class and NP-class Hamiltonians provides a quantitative
+                measure of structural separation. λ₀ represents the ground state eigenvalue.
+            </p>
 
             <div id="spectrum-3d"></div>
 
@@ -648,12 +671,17 @@
     <!-- MODE 6: 143 Test Problems -->
     <div id="tests" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🧪 143 INDEPENDENT TEST PROBLEMS</h1>
+            <h1 style="text-align: center; margin: 20px 0;">Cross-Domain Consistency Analysis</h1>
+            <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Testing the framework against 143 mathematical problems from diverse fields.
+                Consistent CH₂ values across domains would support the universality hypothesis.
+            </p>
 
             <div class="info-display">
-                <strong>Universal Framework Validation</strong><br>
-                All 143 problems exhibit identical CH₂ = 0.95398... ± 0.00001<br>
-                Statistical significance: P < 10^(-50) - IMPOSSIBLY unlikely to be coincidence </div>
+                <strong>Framework Validation Criteria</strong><br>
+                If problems from number theory, complexity, differential equations, and other fields
+                all converge to similar CH₂ values, this suggests underlying structural unity.
+            </div>
 
                     <div class="stats-panel">
                         <div class="stat-grid">
@@ -696,7 +724,11 @@
         <!-- MODE 7: P vs NP Comparison -->
         <div id="compare" class="mode">
             <div class="container">
-                <h1 style="text-align: center; margin: 20px 0;">⚖️ P vs NP: SIDE-BY-SIDE COMPARISON</h1>
+                <h1 style="text-align: center; margin: 20px 0;">P vs NP: Structural Comparison</h1>
+                <p style="text-align: center; color: #7c3aed; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    Side-by-side visualization of P-class (deterministic) vs NP-class (nondeterministic) computation.
+                    The resonance parameters α_P and α_NP yield different spectral properties.
+                </p>
 
                 <div class="comparison-grid">
                     <div class="comparison-panel p-class">
@@ -728,11 +760,19 @@
 
                 <div class="stats-panel">
                     <h3 style="text-align: center; color: #ffff00; margin-bottom: 15px;">
-                        THE SEPARATION: Δ = λ₀(H_P) - λ₀(H_NP) = 0.0539677287 > 0
+                        Computed Spectral Gap: Δ = λ₀(H_P) - λ₀(H_NP) = 0.0539677287 > 0
                     </h3>
-                    <div style="text-align: center; font-size: 1.5em; color: #ffff00;">
-                        ∴ P ≠ NP ✓
+                    <div style="text-align: center; font-size: 1.1em; color: #a78bfa; max-width: 600px; margin: 0 auto;">
+                        A positive spectral gap suggests structural separation between complexity classes.
+                        This framework provides a novel approach to analyzing P vs NP through spectral theory.
                     </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(124, 58, 237, 0.1); border-radius: 5px; border: 1px solid #7c3aed;">
+                    <p style="color: #7c3aed; font-size: 0.9em;">
+                        <strong>Note:</strong> This visualization explores theoretical frameworks from Principia Fractalis.
+                        The P vs NP problem remains one of the seven Millennium Prize Problems.
+                    </p>
                 </div>
             </div>
         </div>
