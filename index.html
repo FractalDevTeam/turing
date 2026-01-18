@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P ≠ NP: Interactive Proof Explorer — Principia Fractalis</title>
+    <title>P vs NP Interactive Proof Explorer | Principia Fractalis</title>
+    <meta name="description" content="Interactive visualization of the P vs NP complexity separation through spectral analysis and Turing machine encoding">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #a78bfa;
+            --primary-dark: #7c3aed;
+            --primary-light: #c4b5fd;
+            --accent-gold: #fbbf24;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --bg-dark: #0f0d1a;
+            --bg-card: #1a1625;
+            --bg-elevated: #241f33;
+            --text-primary: #f5f3ff;
+            --text-secondary: #a1a1aa;
+            --border: rgba(167, 139, 250, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,66 +32,112 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #1e1b4b;
-            color: #a78bfa;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
         /* Navigation */
         .nav-bar {
-            background: rgba(30, 27, 75, 0.95);
-            border-bottom: 2px solid #a78bfa;
-            padding: 15px;
+            background: rgba(15, 13, 26, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-content {
+            max-width: 1800px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .nav-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            text-shadow: 0 0 10px #a78bfa;
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
         .nav-tabs {
             display: flex;
-            gap: 10px;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
-            background: rgba(167, 139, 250, 0.1);
-            border: 2px solid #a78bfa;
-            color: #a78bfa;
-            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.6rem 1rem;
             cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
         }
 
         .tab-btn:hover {
-            background: rgba(167, 139, 250, 0.3);
-            box-shadow: 0 0 15px #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--primary-light);
+            border-color: var(--primary);
         }
 
         .tab-btn.active {
-            background: #a78bfa;
-            color: #000;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-color: var(--primary);
         }
 
-        /* Modes */
+        /* Main Content */
         .mode {
             display: none;
-            padding: 20px;
+            padding: 2rem;
             min-height: calc(100vh - 80px);
+            animation: fadeIn 0.3s ease;
         }
 
         .mode.active {
             display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .container {
@@ -84,474 +145,664 @@
             margin: 0 auto;
         }
 
-        /* Canvas */
-        canvas {
-            border: 2px solid #a78bfa;
-            background: #1e1b4b;
-            display: block;
-            margin: 20px auto;
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        /* Consciousness Field Visualization */
-        .consciousness-field {
-            position: relative;
-            width: 100%;
-            height: 600px;
-            background: radial-gradient(circle at center, #2d1b4e 0%, #000 100%);
-            border: 2px solid #a78bfa;
-            border-radius: 10px;
-            overflow: hidden;
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .field-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        .page-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* Stats Panel */
-        .stats-panel {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #a78bfa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .stat-grid {
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(167, 139, 250, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
         }
 
-        .stat-box {
-            background: rgba(124, 58, 237, 0.2);
-            padding: 15px;
-            border-left: 3px solid #a78bfa;
-            border-radius: 5px;
+        .stat-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border-left: 3px solid var(--primary);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card.golden {
+            border-left-color: var(--accent-gold);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--accent-green);
+        }
+
+        .stat-card.danger {
+            border-left-color: var(--accent-red);
         }
 
         .stat-label {
-            color: #7c3aed;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
         }
 
         .stat-value {
-            color: #a78bfa;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .stat-value.critical {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .stat-value.golden {
-            color: #ffd700;
-            text-shadow: 0 0 10px #ffd700;
+            color: var(--accent-gold);
         }
 
-        /* Oracle Test Panel */
+        .stat-value.success {
+            color: var(--accent-green);
+        }
+
+        .stat-value.danger {
+            color: var(--accent-red);
+        }
+
+        /* Canvas */
+        canvas {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-dark);
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        /* Controls */
+        .control-bar {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        button {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        button.secondary:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary);
+        }
+
+        button.danger {
+            background: var(--accent-red);
+        }
+
+        button.danger:hover {
+            background: #ef4444;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="range"] {
+            width: 120px;
+            accent-color: var(--primary);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .info-box.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .info-box h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .info-box code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Equation Display */
+        .equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin: 1rem 0;
+            color: var(--accent-gold);
+        }
+
+        /* Grid Layouts */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Oracle Grid */
         .oracle-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            gap: 1rem;
         }
 
-        .oracle-test {
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #a78bfa;
-            border-radius: 10px;
-            padding: 20px;
+        .oracle-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
         }
 
-        .oracle-test.running {
-            border-color: #ffff00;
-            animation: pulse 1s infinite;
+        .oracle-card.running {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
         }
 
-        .oracle-test.complete {
-            border-color: #a78bfa;
+        .oracle-card.complete {
+            border-color: var(--accent-green);
         }
 
         .oracle-header {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            color: #ffff00;
+            font-weight: 600;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .oracle-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
         }
 
         .oracle-result {
-            background: rgba(124, 58, 237, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
         }
 
-        /* Test Problems Grid */
+        /* Test Grid */
         .test-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 4px;
         }
 
         .test-cell {
             aspect-ratio: 1;
-            border: 1px solid #a78bfa;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8em;
-            background: rgba(91, 33, 182, 0.2);
-            transition: all 0.3s;
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .test-cell:hover {
-            background: rgba(124, 58, 237, 0.4);
-            transform: scale(1.05);
+            background: rgba(167, 139, 250, 0.2);
+            transform: scale(1.1);
         }
 
         .test-cell.verified {
-            background: rgba(167, 139, 250, 0.3);
-            border-color: #a78bfa;
+            background: rgba(52, 211, 153, 0.3);
+            border-color: var(--accent-green);
         }
 
         .test-cell.running {
-            background: rgba(255, 255, 0, 0.3);
-            border-color: #ffff00;
+            background: rgba(251, 191, 36, 0.3);
+            border-color: var(--accent-gold);
             animation: pulse 0.5s infinite;
         }
 
-        /* Controls */
-        .control-panel {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #a78bfa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        button {
-            background: #a78bfa;
-            color: #000;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        button:hover {
-            background: #7c3aed;
-            box-shadow: 0 0 15px #a78bfa;
-            transform: translateY(-2px);
-        }
-
-        button.danger {
-            background: #ff0000;
-        }
-
-        button.danger:hover {
-            background: #aa0000;
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        button.warning {
-            background: #ffff00;
-        }
-
-        button.warning:hover {
-            background: #aaaa00;
-            box-shadow: 0 0 15px #ffff00;
-        }
-
-        input[type="range"] {
-            width: 200px;
-            accent-color: #a78bfa;
-        }
-
-        label {
-            color: #7c3aed;
-            margin-right: 10px;
-        }
-
-        /* 3D Scene */
-        #spectrum-3d {
-            width: 100%;
-            height: 500px;
-            background: linear-gradient(135deg, #000 0%, #2d1b4e 100%);
-        }
-
-        /* Fractal Canvas */
-        .fractal-container {
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .fractal-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(30, 27, 75, 0.95);
-            padding: 15px;
-            border: 2px solid #a78bfa;
-            border-radius: 5px;
-        }
-
-        /* Info Display */
-        .info-display {
-            background: rgba(124, 58, 237, 0.2);
-            border-left: 3px solid #a78bfa;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-
-        .info-display pre {
-            color: #a78bfa;
-            overflow-x: auto;
-        }
-
-        /* Animations */
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes glow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 5px #a78bfa;
-            }
-
-            50% {
-                box-shadow: 0 0 20px #a78bfa;
-            }
-        }
-
-        /* Comparison View */
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .comparison-panel {
-            border: 2px solid;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .comparison-panel.p-class {
-            border-color: #a78bfa;
-            background: rgba(167, 139, 250, 0.05);
-        }
-
-        .comparison-panel.np-class {
-            border-color: #ff0000;
-            background: rgba(255, 0, 0, 0.05);
-        }
-
-        .comparison-panel h3 {
-            margin-bottom: 15px;
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: rgba(91, 33, 182, 0.5);
-            border: 2px solid #a78bfa;
-            border-radius: 5px;
+        .progress-container {
+            background: var(--bg-dark);
+            border-radius: 8px;
             overflow: hidden;
-            margin: 10px 0;
+            height: 32px;
+            border: 1px solid var(--border);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #a78bfa 0%, #7c3aed 100%);
-            transition: width 0.3s;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            transition: width 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000;
-            font-weight: bold;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
         }
 
         /* Log Display */
         .log-display {
-            background: #1e1b4b;
-            border: 2px solid #a78bfa;
-            padding: 15px;
-            border-radius: 5px;
-            max-height: 300px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 250px;
             overflow-y: auto;
-            font-size: 0.9em;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
         }
 
         .log-entry {
-            padding: 5px;
-            border-bottom: 1px solid #003300;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .log-entry.success {
-            color: #a78bfa;
+        .log-entry.success { color: var(--accent-green); }
+        .log-entry.warning { color: var(--accent-gold); }
+        .log-entry.error { color: var(--accent-red); }
+
+        /* Comparison Panels */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
-        .log-entry.warning {
-            color: #ffff00;
+        @media (max-width: 900px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .log-entry.error {
-            color: #ff0000;
+        .comparison-panel {
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px solid;
+        }
+
+        .comparison-panel.p-class {
+            border-color: var(--accent-green);
+            background: rgba(52, 211, 153, 0.05);
+        }
+
+        .comparison-panel.np-class {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.05);
+        }
+
+        .comparison-panel h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-panel.p-class h3 { color: var(--accent-green); }
+        .comparison-panel.np-class h3 { color: var(--accent-red); }
+
+        /* 3D Container */
+        #spectrum-3d {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Educational Tooltips */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted var(--primary);
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 100;
+            max-width: 300px;
+            white-space: normal;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-bar {
+                padding: 1rem;
+            }
+
+            .nav-tabs {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .mode {
+                padding: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            canvas {
+                height: auto !important;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
         }
     </style>
 </head>
-
 <body>
     <nav class="nav-bar">
-        <div class="nav-title">🔬 P ≠ NP: ULTIMATE PROOF EXPLORER 🔬</div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchMode('turing')">Turing Machine</button>
-            <button class="tab-btn" onclick="switchMode('consciousness')">Consciousness Field</button>
-            <button class="tab-btn" onclick="switchMode('oracle')">Oracle Tests</button>
-            <button class="tab-btn" onclick="switchMode('fractal')">Fractal Structure</button>
-            <button class="tab-btn" onclick="switchMode('spectrum')">3D Spectrum</button>
-            <button class="tab-btn" onclick="switchMode('tests')">143 Problems</button>
-            <button class="tab-btn" onclick="switchMode('compare')">P vs NP Compare</button>
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="nav-logo">PF</div>
+                <div>
+                    <div class="nav-title">P vs NP Proof Explorer</div>
+                    <div class="nav-subtitle">Principia Fractalis Interactive Visualization</div>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="switchMode('turing')">Turing Machine</button>
+                <button class="tab-btn" onclick="switchMode('consciousness')">Spectral Field</button>
+                <button class="tab-btn" onclick="switchMode('oracle')">Oracle Tests</button>
+                <button class="tab-btn" onclick="switchMode('fractal')">Fractal Structure</button>
+                <button class="tab-btn" onclick="switchMode('spectrum')">Eigenvalue Spectrum</button>
+                <button class="tab-btn" onclick="switchMode('tests')">143 Problems</button>
+                <button class="tab-btn" onclick="switchMode('compare')">P vs NP</button>
+            </div>
         </div>
     </nav>
 
     <!-- MODE 1: Turing Machine -->
     <div id="turing" class="mode active">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🖥️ TURING MACHINE → SPECTRAL GAP</h1>
+            <div class="page-header">
+                <h1>Turing Machine Configuration Encoding</h1>
+                <p class="subtitle">Visualizing how computational configurations map to spectral operators through prime-power encoding</p>
+            </div>
 
-            <div class="stats-panel">
-                <div class="stat-grid">
-                    <div class="stat-box">
+            <div class="info-box">
+                <h4>The Core Idea</h4>
+                <p>Every Turing machine configuration (state, head position, tape contents) can be uniquely encoded as a natural number using prime factorization. This encoding preserves computational structure and enables spectral analysis of complexity classes.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x03BB;</div>
+                    <div class="card-title">Spectral Parameters</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
                         <div class="stat-label">Configuration Encoding</div>
                         <div class="stat-value" id="tm-encoding">-</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">D₃ Digital Sum</div>
+                    <div class="stat-card golden">
+                        <div class="stat-label">D&#x2083; Digital Sum</div>
                         <div class="stat-value golden" id="tm-sum">-</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">α Resonance (P)</div>
-                        <div class="stat-value" id="tm-alpha-p">√2 = 1.414</div>
+                    <div class="stat-card success">
+                        <div class="stat-label">&#x03B1;&#x209A; (P-class)</div>
+                        <div class="stat-value success" id="tm-alpha-p">&#x221A;2 = 1.41421</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">α Resonance (NP)</div>
-                        <div class="stat-value critical" id="tm-alpha-np">φ+¼ = 1.868</div>
+                    <div class="stat-card danger">
+                        <div class="stat-label">&#x03B1;&#x2099;&#x209A; (NP-class)</div>
+                        <div class="stat-value danger" id="tm-alpha-np">&#x03C6;+&#xBC; = 1.86803</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Spectral Gap Δ</div>
+                    <div class="stat-card golden">
+                        <div class="stat-label">Spectral Gap &#x0394;</div>
                         <div class="stat-value golden" id="tm-gap">0.0539677287</div>
                     </div>
-                    <div class="stat-box">
+                    <div class="stat-card success">
                         <div class="stat-label">Conclusion</div>
-                        <div class="stat-value" style="color: #ffff00;">P ≠ NP ✓</div>
+                        <div class="stat-value success">P &#x2260; NP</div>
                     </div>
                 </div>
             </div>
 
-            <canvas id="tm-canvas" width="1200" height="400"></canvas>
-
-            <div class="control-panel">
-                <div class="control-row">
-                    <button onclick="tmDemo.reset()">🔄 Reset</button>
-                    <button onclick="tmDemo.step()">▶️ Step</button>
-                    <button onclick="tmDemo.run()">⏩ Run</button>
-                    <button onclick="tmDemo.stop()" class="danger">⏸️ Stop</button>
-                    <label>Speed:</label>
-                    <input type="range" min="100" max="2000" value="500" id="tm-speed">
+            <div class="card">
+                <canvas id="tm-canvas" width="1200" height="400"></canvas>
+                <div class="control-bar">
+                    <button onclick="tmDemo.reset()">Reset</button>
+                    <button onclick="tmDemo.step()" class="secondary">Step</button>
+                    <button onclick="tmDemo.run()">Run</button>
+                    <button onclick="tmDemo.stop()" class="danger">Stop</button>
+                    <div class="control-group">
+                        <label>Speed:</label>
+                        <input type="range" min="100" max="2000" value="500" id="tm-speed">
+                    </div>
                 </div>
+            </div>
+
+            <div class="equation">
+                encode(C) = 2<sup>state</sup> &#xB7; 3<sup>head</sup> &#xB7; &#x220F;<sub>j</sub> p<sub>j</sub><sup>(a<sub>j</sub>+1)</sup>
+            </div>
+
+            <div class="info-box warning">
+                <h4>Mathematical Foundation</h4>
+                <p>The encoding is <strong>injective</strong> by the Fundamental Theorem of Arithmetic - each configuration maps to a unique natural number. The base-3 digital sum <code>D&#x2083;(n)</code> captures fractal self-similarity that persists across all oracle extensions, making the proof non-relativizing.</p>
             </div>
         </div>
     </div>
 
-    <!-- MODE 2: Consciousness Field -->
+    <!-- MODE 2: Spectral Field -->
     <div id="consciousness" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🧠 CONSCIOUSNESS FIELD VISUALIZATION</h1>
+            <div class="page-header">
+                <h1>Spectral Energy Field Visualization</h1>
+                <p class="subtitle">The CH&#x2082; coherence parameter separates P and NP complexity classes through distinct energy signatures</p>
+            </div>
 
-            <div class="stats-panel">
-                <div class="stat-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">CH₂ Threshold</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x03A8;</div>
+                    <div class="card-title">Coherence Parameters</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card golden">
+                        <div class="stat-label">CH&#x2082; Threshold</div>
                         <div class="stat-value golden" id="ch2-threshold">0.95398...</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">P-Class CH₂</div>
-                        <div class="stat-value" id="ch2-p">0.95</div>
+                    <div class="stat-card success">
+                        <div class="stat-label">P-Class CH&#x2082;</div>
+                        <div class="stat-value success">0.95000</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">NP-Class CH₂</div>
-                        <div class="stat-value critical" id="ch2-np">0.9954</div>
+                    <div class="stat-card danger">
+                        <div class="stat-label">NP-Class CH&#x2082;</div>
+                        <div class="stat-value danger">0.99540</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Crystallization</div>
-                        <div class="stat-value golden" id="crystallization">ACTIVE</div>
+                    <div class="stat-card golden">
+                        <div class="stat-label">Golden Ratio &#x03C6;</div>
+                        <div class="stat-value golden">1.618033...</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Golden Ratio φ</div>
-                        <div class="stat-value golden" id="phi-value">1.618033...</div>
-                    </div>
-                    <div class="stat-box">
+                    <div class="stat-card">
                         <div class="stat-label">Fractal Dimension</div>
-                        <div class="stat-value" id="fractal-dim">log₃(2)</div>
+                        <div class="stat-value">log&#x2083;(2)</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Field Status</div>
+                        <div class="stat-value success" id="field-status">ACTIVE</div>
                     </div>
                 </div>
             </div>
 
-            <canvas id="consciousness-canvas" width="1400" height="700"></canvas>
-
-            <div class="control-panel">
-                <div class="control-row">
-                    <button onclick="consciousnessViz.start()">▶️ Animate</button>
-                    <button onclick="consciousnessViz.stop()" class="danger">⏸️ Stop</button>
-                    <button onclick="consciousnessViz.reset()">🔄 Reset</button>
-                    <label>Intensity:</label>
-                    <input type="range" min="0" max="100" value="50" id="consciousness-intensity"
-                        onchange="consciousnessViz.setIntensity(this.value)">
+            <div class="card">
+                <canvas id="consciousness-canvas" width="1400" height="600"></canvas>
+                <div class="control-bar">
+                    <button onclick="consciousnessViz.start()">Animate</button>
+                    <button onclick="consciousnessViz.stop()" class="danger">Stop</button>
+                    <button onclick="consciousnessViz.reset()" class="secondary">Reset</button>
+                    <div class="control-group">
+                        <label>Intensity:</label>
+                        <input type="range" min="0" max="100" value="50" id="consciousness-intensity" onchange="consciousnessViz.setIntensity(this.value)">
+                    </div>
                 </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Spectral Interpretation</h4>
+                <p>The energy field shows how computational states cluster around different coherence levels. P-class problems (green) remain below the CH&#x2082; threshold, while NP-class problems (red) exhibit elevated coherence due to certificate branching structure. This separation is <strong>mathematically necessary</strong>, not empirical.</p>
             </div>
         </div>
     </div>
@@ -559,88 +810,110 @@
     <!-- MODE 3: Oracle Tests -->
     <div id="oracle" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🔮 ORACLE SEPARATION TESTS</h1>
-
-            <div class="info-display">
-                <strong>Baker-Gill-Solovay Relativization Barrier</strong><br>
-                Our proof circumvents this because D₃(n^A) = D₃(n) for all oracles A.<br>
-                The digital sum is oracle-independent → spectral gap persists: Δ^A = Δ
+            <div class="page-header">
+                <h1>Oracle Independence Verification</h1>
+                <p class="subtitle">Demonstrating that the spectral gap persists across all oracle extensions</p>
             </div>
 
-            <div class="control-panel">
-                <button onclick="oracleTests.runAll()">🚀 Run All Oracle Tests</button>
-                <button onclick="oracleTests.clear()">🗑️ Clear Results</button>
+            <div class="info-box warning">
+                <h4>Baker-Gill-Solovay Barrier</h4>
+                <p>In 1975, Baker, Gill, and Solovay proved that relativizing proof techniques cannot resolve P vs NP. Our approach circumvents this because <code>D&#x2083;(n<sup>A</sup>) = D&#x2083;(n)</code> for all oracles A - the digital sum is intrinsically oracle-independent due to its base-3 fractal structure.</p>
+            </div>
+
+            <div class="card">
+                <div class="control-bar">
+                    <button onclick="oracleTests.runAll()">Run All Oracle Tests</button>
+                    <button onclick="oracleTests.clear()" class="secondary">Clear Results</button>
+                </div>
             </div>
 
             <div class="oracle-grid" id="oracle-grid"></div>
 
-            <div class="log-display" id="oracle-log"></div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x1F4DD;</div>
+                    <div class="card-title">Test Log</div>
+                </div>
+                <div class="log-display" id="oracle-log"></div>
+            </div>
         </div>
     </div>
 
     <!-- MODE 4: Fractal Structure -->
     <div id="fractal" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🌀 BASE-3 FRACTAL STRUCTURE</h1>
+            <div class="page-header">
+                <h1>Base-3 Fractal Structure</h1>
+                <p class="subtitle">The self-similar structure of D&#x2083;(n) that enables oracle-independent proofs</p>
+            </div>
 
-            <div class="fractal-container">
-                <canvas id="fractal-canvas" width="1400" height="800"></canvas>
-                <div class="fractal-controls">
-                    <div><strong>Fractal Controls</strong></div>
-                    <div style="margin: 10px 0;">
-                        <label>Depth:</label><br>
-                        <input type="range" min="1" max="10" value="6" id="fractal-depth"
-                            onchange="fractalViz.setDepth(this.value)">
+            <div class="card">
+                <canvas id="fractal-canvas" width="1400" height="700"></canvas>
+                <div class="control-bar">
+                    <button onclick="fractalViz.render()">Render</button>
+                    <div class="control-group">
+                        <label>Depth:</label>
+                        <input type="range" min="1" max="10" value="6" id="fractal-depth" onchange="fractalViz.setDepth(this.value)">
                         <span id="fractal-depth-val">6</span>
-                    </div>
-                    <div>
-                        <button onclick="fractalViz.render()">🔄 Render</button>
                     </div>
                 </div>
             </div>
 
-            <div class="info-display">
-                <strong>Base-3 Digital Sum Structure</strong><br>
-                This fractal represents the D₃(n) function structure.<br>
-                Each branch represents a ternary digit (0, 1, 2).<br>
-                Self-similar at all scales - this is why it's non-relativizing!
+            <div class="info-box">
+                <h4>Why Base-3?</h4>
+                <p>The ternary (base-3) representation creates a fractal structure where each node splits into three branches representing digits 0, 1, and 2. This self-similarity at all scales is what makes the digital sum function <code>D&#x2083;(n)</code> immune to oracle modifications - the structure is preserved under any computational extension.</p>
+            </div>
+
+            <div class="equation">
+                D&#x2083;(n) = &#x2211;<sub>i</sub> d<sub>i</sub> where n = &#x2211;<sub>i</sub> d<sub>i</sub> &#xB7; 3<sup>i</sup>
             </div>
         </div>
     </div>
 
-    <!-- MODE 5: 3D Spectrum -->
+    <!-- MODE 5: Eigenvalue Spectrum -->
     <div id="spectrum" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">📊 3D EIGENVALUE SPECTRUM</h1>
+            <div class="page-header">
+                <h1>Eigenvalue Spectrum Visualization</h1>
+                <p class="subtitle">The spectral separation between H&#x209A; and H&#x2099;&#x209A; Hamiltonians</p>
+            </div>
 
-            <div id="spectrum-3d"></div>
-
-            <div class="control-panel">
-                <div class="control-row">
-                    <button onclick="spectrumViz.rotate()">🔄 Auto-Rotate</button>
-                    <button onclick="spectrumViz.stop()" class="danger">⏸️ Stop</button>
-                    <button onclick="spectrumViz.reset()">↺ Reset View</button>
-                    <label>Eigenvalues:</label>
-                    <input type="range" min="10" max="100" value="50" id="spectrum-count"
-                        onchange="spectrumViz.setCount(this.value)">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x03BB;</div>
+                    <div class="card-title">Ground State Eigenvalues</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card success">
+                        <div class="stat-label">&#x03BB;&#x2080;(H&#x209A;)</div>
+                        <div class="stat-value success">0.22214</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-label">&#x03BB;&#x2080;(H&#x2099;&#x209A;)</div>
+                        <div class="stat-value danger">0.16817</div>
+                    </div>
+                    <div class="stat-card golden">
+                        <div class="stat-label">Spectral Gap &#x0394;</div>
+                        <div class="stat-value golden">0.05397</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="stats-panel">
-                <div class="stat-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">Ground State λ₀(H_P)</div>
-                        <div class="stat-value" id="spec-lambda-p">0.2221</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Ground State λ₀(H_NP)</div>
-                        <div class="stat-value critical" id="spec-lambda-np">0.1681</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Spectral Gap Δ</div>
-                        <div class="stat-value golden" id="spec-gap">0.0540</div>
+            <div class="card">
+                <div id="spectrum-3d"></div>
+                <div class="control-bar">
+                    <button onclick="spectrumViz.rotate()">Auto-Rotate</button>
+                    <button onclick="spectrumViz.stop()" class="danger">Stop</button>
+                    <button onclick="spectrumViz.reset()" class="secondary">Reset View</button>
+                    <div class="control-group">
+                        <label>Eigenvalues:</label>
+                        <input type="range" min="10" max="100" value="50" id="spectrum-count" onchange="spectrumViz.setCount(this.value)">
                     </div>
                 </div>
+            </div>
+
+            <div class="equation">
+                &#x0394; = &#x03BB;&#x2080;(H&#x209A;) - &#x03BB;&#x2080;(H&#x2099;&#x209A;) = &#x03C0;/(10&#x221A;2) - &#x03C0;/(10(&#x03C6;+&#xBC;)) &#x2248; 0.0540 > 0
             </div>
         </div>
     </div>
@@ -648,123 +921,134 @@
     <!-- MODE 6: 143 Test Problems -->
     <div id="tests" class="mode">
         <div class="container">
-            <h1 style="text-align: center; margin: 20px 0;">🧪 143 INDEPENDENT TEST PROBLEMS</h1>
+            <div class="page-header">
+                <h1>143 Independent Test Problems</h1>
+                <p class="subtitle">Cross-domain verification of the universal coherence signature</p>
+            </div>
 
-            <div class="info-display">
-                <strong>Universal Framework Validation</strong><br>
-                All 143 problems exhibit identical CH₂ = 0.95398... ± 0.00001<br>
-                Statistical significance: P < 10^(-50) - IMPOSSIBLY unlikely to be coincidence </div>
+            <div class="info-box">
+                <h4>Statistical Significance</h4>
+                <p>All 143 test problems from different mathematical domains exhibit the same CH&#x2082; &#x2248; 0.95398 &#xB1; 0.00001. The probability of this occurring by chance is less than 10<sup>-50</sup>, providing overwhelming statistical evidence for the underlying structure.</p>
+            </div>
 
-                    <div class="stats-panel">
-                        <div class="stat-grid">
-                            <div class="stat-box">
-                                <div class="stat-label">Problems Verified</div>
-                                <div class="stat-value" id="tests-verified">0 / 143</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">Consistency</div>
-                                <div class="stat-value golden" id="tests-consistency">-</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">Golden Ratio φ</div>
-                                <div class="stat-value" id="tests-phi">127/143 (89%)</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">Base-3 Scaling</div>
-                                <div class="stat-value" id="tests-base3">109/143 (76%)</div>
-                            </div>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x1F9EA;</div>
+                    <div class="card-title">Verification Progress</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Problems Verified</div>
+                        <div class="stat-value" id="tests-verified">0 / 143</div>
                     </div>
-
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="tests-progress" style="width: 0%">0%</div>
+                    <div class="stat-card golden">
+                        <div class="stat-label">Consistency</div>
+                        <div class="stat-value golden" id="tests-consistency">-</div>
                     </div>
-
-                    <div class="control-panel">
-                        <button onclick="testProblems.runAll()">🚀 Run All 143 Tests</button>
-                        <button onclick="testProblems.runRandom()">🎲 Random Sample (10)</button>
-                        <button onclick="testProblems.stop()" class="danger">⏸️ Stop</button>
-                        <button onclick="testProblems.clear()">🗑️ Clear</button>
+                    <div class="stat-card">
+                        <div class="stat-label">Golden Ratio Match</div>
+                        <div class="stat-value">127/143 (89%)</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Base-3 Scaling</div>
+                        <div class="stat-value">109/143 (76%)</div>
+                    </div>
+                </div>
+                <div class="progress-container" style="margin-top: 1rem;">
+                    <div class="progress-fill" id="tests-progress" style="width: 0%">0%</div>
+                </div>
+            </div>
 
-                    <div class="test-grid" id="test-grid"></div>
+            <div class="card">
+                <div class="control-bar">
+                    <button onclick="testProblems.runAll()">Run All 143 Tests</button>
+                    <button onclick="testProblems.runRandom()" class="secondary">Random Sample (10)</button>
+                    <button onclick="testProblems.stop()" class="danger">Stop</button>
+                    <button onclick="testProblems.clear()" class="secondary">Clear</button>
+                </div>
+            </div>
 
-                    <div class="log-display" id="test-log"></div>
+            <div class="card">
+                <div class="test-grid" id="test-grid"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">&#x1F4DD;</div>
+                    <div class="card-title">Verification Log</div>
+                </div>
+                <div class="log-display" id="test-log"></div>
             </div>
         </div>
+    </div>
 
-        <!-- MODE 7: P vs NP Comparison -->
-        <div id="compare" class="mode">
-            <div class="container">
-                <h1 style="text-align: center; margin: 20px 0;">⚖️ P vs NP: SIDE-BY-SIDE COMPARISON</h1>
+    <!-- MODE 7: P vs NP Comparison -->
+    <div id="compare" class="mode">
+        <div class="container">
+            <div class="page-header">
+                <h1>P vs NP: Side-by-Side Comparison</h1>
+                <p class="subtitle">Visualizing the fundamental structural difference between complexity classes</p>
+            </div>
 
-                <div class="comparison-grid">
-                    <div class="comparison-panel p-class">
-                        <h3 style="color: #a78bfa;">P-CLASS (Deterministic)</h3>
-                        <canvas id="compare-p-canvas" width="600" height="500"></canvas>
-                        <div class="info-display">
-                            <strong>Properties:</strong><br>
-                            • α_P = √2 ≈ 1.414<br>
-                            • No certificate structure<br>
-                            • CH₂ = 0.95 (threshold)<br>
-                            • λ₀ = π/(10√2) ≈ 0.2221<br>
-                            • Polynomial time O(n^k)
-                        </div>
-                    </div>
-
-                    <div class="comparison-panel np-class">
-                        <h3 style="color: #ff0000;">NP-CLASS (Nondeterministic)</h3>
-                        <canvas id="compare-np-canvas" width="600" height="500"></canvas>
-                        <div class="info-display">
-                            <strong>Properties:</strong><br>
-                            • α_NP = φ + 1/4 ≈ 1.868<br>
-                            • Certificate branching<br>
-                            • CH₂ = 0.9954 (elevated)<br>
-                            • λ₀ = π/(10(φ+1/4)) ≈ 0.1681<br>
-                            • Polynomial verify O(n^k)
-                        </div>
+            <div class="comparison-grid">
+                <div class="comparison-panel p-class">
+                    <h3>P-Class (Deterministic)</h3>
+                    <canvas id="compare-p-canvas" width="600" height="400"></canvas>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <p><strong>&#x03B1;&#x209A; = &#x221A;2 &#x2248; 1.414</strong></p>
+                        <p>Single computation path, no certificate branching</p>
+                        <p>CH&#x2082; = 0.95 (below threshold)</p>
+                        <p>&#x03BB;&#x2080; = &#x03C0;/(10&#x221A;2) &#x2248; 0.2221</p>
+                        <p>Time: O(n<sup>k</sup>) polynomial</p>
                     </div>
                 </div>
 
-                <div class="stats-panel">
-                    <h3 style="text-align: center; color: #ffff00; margin-bottom: 15px;">
-                        THE SEPARATION: Δ = λ₀(H_P) - λ₀(H_NP) = 0.0539677287 > 0
-                    </h3>
-                    <div style="text-align: center; font-size: 1.5em; color: #ffff00;">
-                        ∴ P ≠ NP ✓
+                <div class="comparison-panel np-class">
+                    <h3>NP-Class (Nondeterministic)</h3>
+                    <canvas id="compare-np-canvas" width="600" height="400"></canvas>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <p><strong>&#x03B1;&#x2099;&#x209A; = &#x03C6;+&#xBC; &#x2248; 1.868</strong></p>
+                        <p>Certificate branching structure</p>
+                        <p>CH&#x2082; = 0.9954 (above threshold)</p>
+                        <p>&#x03BB;&#x2080; = &#x03C0;/(10(&#x03C6;+&#xBC;)) &#x2248; 0.1681</p>
+                        <p>Verify: O(n<sup>k</sup>) polynomial</p>
                     </div>
                 </div>
             </div>
+
+            <div class="card" style="text-align: center; margin-top: 2rem;">
+                <div class="equation" style="font-size: 1.5rem;">
+                    &#x0394; = &#x03BB;&#x2080;(H&#x209A;) - &#x03BB;&#x2080;(H&#x2099;&#x209A;) = 0.0539677287 > 0
+                </div>
+                <h2 style="color: var(--accent-gold); margin-top: 1rem; font-size: 2rem;">&#x2234; P &#x2260; NP</h2>
+            </div>
         </div>
+    </div>
 
-        <script>
-            // Switch between modes
-            function switchMode(mode) {
-                document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
-                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                document.getElementById(mode).classList.add('active');
-                event.target.classList.add('active');
+    <script>
+        // Mode switching
+        function switchMode(mode) {
+            document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(mode).classList.add('active');
+            event.target.classList.add('active');
 
-                // Initialize mode-specific visualization
-                if (mode === 'consciousness') consciousnessViz.init();
-                if (mode === 'fractal') fractalViz.init();
-                if (mode === 'spectrum') spectrumViz.init();
-                if (mode === 'tests') testProblems.init();
-                if (mode === 'oracle') oracleTests.init();
-                if (mode === 'compare') compareViz.init();
-            }
+            // Initialize visualizations
+            if (mode === 'consciousness') consciousnessViz.init();
+            if (mode === 'fractal') fractalViz.init();
+            if (mode === 'spectrum') spectrumViz.init();
+            if (mode === 'tests') testProblems.init();
+            if (mode === 'oracle') oracleTests.init();
+            if (mode === 'compare') compareViz.init();
+        }
 
-            // Constants
-            const PHI = (1 + Math.sqrt(5)) / 2;
-            const ALPHA_P = Math.sqrt(2);
-            const ALPHA_NP = PHI + 0.25;
-            const PI_10 = Math.PI / 10;
-            const CH2_THRESHOLD = 0.95398265359;
-
-            // [CONTINUED IN NEXT FILE DUE TO LENGTH...]
-        </script>
-        </script>
-        <script src="proof_explorer.js"></script>
+        // Mathematical Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const ALPHA_P = Math.sqrt(2);
+        const ALPHA_NP = PHI + 0.25;
+        const PI_10 = Math.PI / 10;
+        const CH2_THRESHOLD = 0.95398265359;
+    </script>
+    <script src="proof_explorer.js"></script>
 </body>
-
 </html>
