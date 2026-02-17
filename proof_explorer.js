@@ -155,6 +155,56 @@ const TURING_MACHINES = {
             'q2,F': ['F', 'R', 'q1'],
             'q2,B': ['B', 'N', 'qA'],  // All clauses verified - accept
         }
+    },
+    'busy-beaver-4': {
+        name: '4-State Busy Beaver',
+        description: 'BB(4)=13 ones in 107 steps - Uncomputable',
+        complexity: 'Uncomputable',
+        alphabet: ['0', '1'],
+        states: ['A', 'B', 'C', 'D', 'HALT'],
+        initialState: 'A',
+        initialTape: ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+        initialHead: 10,
+        transitions: {
+            'A,0': ['1', 'R', 'B'], 'A,1': ['1', 'L', 'B'],
+            'B,0': ['1', 'L', 'A'], 'B,1': ['0', 'L', 'C'],
+            'C,0': ['1', 'R', 'HALT'], 'C,1': ['1', 'L', 'D'],
+            'D,0': ['1', 'R', 'D'], 'D,1': ['0', 'R', 'A']
+        }
+    },
+    'collatz': {
+        name: 'Collatz Sequence',
+        description: 'Computes 3n+1 sequence (unsolved problem)',
+        complexity: 'Unknown',
+        alphabet: ['0', '1', 'B'],
+        states: ['qR', 'qC', 'qH'],  // Read, Compute, Halt
+        initialState: 'qR',
+        initialTape: ['1', '1', '0', 'B', 'B', 'B', 'B', 'B'],  // 6 in binary (110)
+        initialHead: 0,
+        transitions: {
+            'qR,0': ['0', 'R', 'qR'], 'qR,1': ['1', 'R', 'qR'],
+            'qR,B': ['B', 'L', 'qC'],
+            'qC,0': ['1', 'L', 'qC'],  // Even: divide by 2 (shift right)
+            'qC,1': ['0', 'N', 'qH'],  // Odd: would need 3n+1 (simplified)
+            'qC,B': ['B', 'N', 'qH']
+        }
+    },
+    'rule-110': {
+        name: 'Rule 110 CA',
+        description: 'Turing-complete cellular automaton',
+        complexity: 'Turing-complete',
+        alphabet: ['0', '1', 'B'],
+        states: ['qS', 'qA', 'qH'],  // Scan, Apply, Halt
+        initialState: 'qS',
+        initialTape: ['0','0','0','0','0','0','1','0','0','0','0','0'],
+        initialHead: 6,
+        transitions: {
+            'qS,0': ['0', 'R', 'qS'], 'qS,1': ['1', 'R', 'qS'],
+            'qS,B': ['B', 'L', 'qA'],
+            'qA,0': ['1', 'L', 'qA'],  // Rule 110 pattern
+            'qA,1': ['1', 'L', 'qA'],
+            'qA,B': ['B', 'N', 'qH']
+        }
     }
 };
 
