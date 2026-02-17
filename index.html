@@ -562,6 +562,70 @@
         .log-entry.error {
             color: #ff0000;
         }
+
+        /* Accessibility: Focus States */
+        button:focus, .tab-btn:focus, select:focus, input:focus {
+            outline: 3px solid #ffd700;
+            outline-offset: 2px;
+        }
+
+        /* Select styling */
+        select {
+            background: #1e1b4b;
+            color: #a78bfa;
+            border: 2px solid #a78bfa;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1200px) {
+            .nav-tabs {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-title {
+                font-size: 1.1em;
+                text-align: center;
+            }
+            canvas {
+                max-width: 100%;
+                height: auto;
+            }
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            .guardians-grid {
+                grid-template-columns: 1fr;
+            }
+            .oracle-grid {
+                grid-template-columns: 1fr;
+            }
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .tm-controls {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 
@@ -569,14 +633,14 @@
     <nav class="nav-bar">
         <div class="nav-title">Principia Fractalis — P vs NP Spectral Analysis</div>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchMode('turing')">Turing Machine</button>
-            <button class="tab-btn" onclick="switchMode('consciousness')">Consciousness Field</button>
-            <button class="tab-btn" onclick="switchMode('oracle')">Oracle Tests</button>
-            <button class="tab-btn" onclick="switchMode('fractal')">Fractal Structure</button>
-            <button class="tab-btn" onclick="switchMode('spectrum')">3D Spectrum</button>
-            <button class="tab-btn" onclick="switchMode('tests')">143 Problems</button>
-            <button class="tab-btn" onclick="switchMode('compare')">P vs NP Compare</button>
-            <button class="tab-btn" onclick="switchMode('guardians')">The Guardians</button>
+            <button class="tab-btn active" onclick="switchMode('turing', this)">Turing Machine</button>
+            <button class="tab-btn" onclick="switchMode('consciousness', this)">Consciousness Field</button>
+            <button class="tab-btn" onclick="switchMode('oracle', this)">Oracle Tests</button>
+            <button class="tab-btn" onclick="switchMode('fractal', this)">Fractal Structure</button>
+            <button class="tab-btn" onclick="switchMode('spectrum', this)">3D Spectrum</button>
+            <button class="tab-btn" onclick="switchMode('tests', this)">143 Problems</button>
+            <button class="tab-btn" onclick="switchMode('compare', this)">P vs NP Compare</button>
+            <button class="tab-btn" onclick="switchMode('guardians', this)">The Guardians</button>
         </div>
     </nav>
 
@@ -1303,27 +1367,23 @@
 
         <script>
             // Switch between modes
-            function switchMode(mode) {
+            function switchMode(mode, btn) {
                 document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
-                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.getElementById(mode).classList.add('active');
-                event.target.classList.add('active');
+                if (btn) btn.classList.add('active');
 
                 // Initialize mode-specific visualization
-                if (mode === 'consciousness') consciousnessViz.init();
-                if (mode === 'fractal') fractalViz.init();
-                if (mode === 'spectrum') spectrumViz.init();
-                if (mode === 'tests') testProblems.init();
-                if (mode === 'oracle') oracleTests.init();
-                if (mode === 'compare') compareViz.init();
+                if (mode === 'consciousness' && typeof consciousnessViz !== 'undefined') consciousnessViz.init();
+                if (mode === 'fractal' && typeof fractalViz !== 'undefined') fractalViz.init();
+                if (mode === 'spectrum' && typeof spectrumViz !== 'undefined') spectrumViz.init();
+                if (mode === 'tests' && typeof testProblems !== 'undefined') testProblems.init();
+                if (mode === 'oracle' && typeof oracleTests !== 'undefined') oracleTests.init();
+                if (mode === 'compare' && typeof compareViz !== 'undefined') compareViz.init();
             }
 
-            // Constants
-            const PHI = (1 + Math.sqrt(5)) / 2;
-            const ALPHA_P = Math.sqrt(2);
-            const ALPHA_NP = PHI + 0.25;
-            const PI_10 = Math.PI / 10;
-            const CH2_THRESHOLD = 0.95398265359;
+            // Mathematical constants are defined in proof_explorer.js
+            // PHI, ALPHA_P, ALPHA_NP, PI_10, CH2_THRESHOLD, SPECTRAL_GAP, etc.
 
             // Expandable block toggle
             function toggleExpandable(element) {
