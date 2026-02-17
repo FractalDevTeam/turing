@@ -445,6 +445,12 @@ class TrueTuringMachine {
         } else if (machine.complexity === 'Uncomputable') {
             classEl.textContent = 'Uncomputable';
             classEl.style.color = '#ffd700';
+        } else if (machine.complexity === 'Unknown') {
+            classEl.textContent = 'Unknown';
+            classEl.style.color = '#ff9900';
+        } else if (machine.complexity === 'Turing-complete') {
+            classEl.textContent = 'Turing-complete';
+            classEl.style.color = '#ff00ff';
         } else {
             classEl.textContent = 'P-class';
             classEl.style.color = '#00ff88';
@@ -967,12 +973,16 @@ class ConsciousnessVisualization {
 class OracleTests {
     constructor() {
         this.tests = [
-            { name: 'Standard Oracle', desc: 'No oracle modifications' },
-            { name: 'Random Oracle', desc: 'Random query responses' },
-            { name: 'SAT Oracle', desc: 'Boolean satisfiability oracle' },
-            { name: 'PSPACE Oracle', desc: 'Polynomial space oracle' },
-            { name: 'Relativizing Oracle', desc: 'Tests Baker-Gill-Solovay' },
-            { name: 'Non-relativizing Test', desc: 'Digital sum independence' }
+            { name: 'Standard Model', desc: 'Baseline: No oracle (unrelativized)', citation: 'Cook (1971)' },
+            { name: 'Random Oracle', desc: 'P^R ≠ NP^R w.p. 1', citation: 'Bennett-Gill (1981)' },
+            { name: 'BGS Separating', desc: 'Oracle A: P^A ≠ NP^A', citation: 'Baker-Gill-Solovay (1975)' },
+            { name: 'BGS Collapsing', desc: 'Oracle B: P^B = NP^B', citation: 'Baker-Gill-Solovay (1975)' },
+            { name: 'PSPACE Oracle', desc: 'TQBF-based oracle access', citation: 'Stockmeyer (1976)' },
+            { name: 'BPP Oracle', desc: 'Probabilistic poly-time', citation: 'Sipser (1983)' },
+            { name: 'IP = PSPACE', desc: 'Non-relativizing result', citation: 'Shamir (1992)' },
+            { name: 'Algebraic Oracle', desc: 'BSS model over reals', citation: 'Blum-Shub-Smale (1989)' },
+            { name: 'Sparse Oracle', desc: 'Mahaney sparse oracle', citation: 'Mahaney (1982)' },
+            { name: 'D₃ Invariance', desc: 'D₃(n^A) = D₃(n) ∀A', citation: 'Principia Fractalis (2026)' }
         ];
         this.results = [];
     }
@@ -987,6 +997,7 @@ class OracleTests {
             div.innerHTML = `
                 <div class="oracle-header">${test.name}</div>
                 <div>${test.desc}</div>
+                <div style="font-size: 10px; color: #a78bfa; margin-top: 4px;">[${test.citation}]</div>
                 <div class="oracle-result" id="oracle-result-${i}">Pending...</div>
             `;
             grid.appendChild(div);
