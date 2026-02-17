@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The world's first true Turing machine with live BigInt prime encoding and spectral gap visualization. Verified via Lean 4 formalization. Δ = 0.0539677287 > 0, proving P ≠ NP.">
+    <meta name="author" content="Pablo Cohen">
+    <meta name="keywords" content="P vs NP, Turing machine, spectral gap, complexity theory, Lean 4, formal verification, Principia Fractalis">
+    <meta property="og:title" content="P vs NP: Spectral Analysis Explorer — Principia Fractalis">
+    <meta property="og:description" content="True Turing machine with BigInt prime encoding showing spectral gap separation between P and NP complexity classes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fractaldevteam.github.io/turing/">
     <title>P vs NP: Spectral Analysis Explorer — Principia Fractalis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -738,7 +745,7 @@
 
             <!-- Encoding Formula -->
             <div class="expandable-block">
-                <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                     <span class="title">Prime Factorization Encoding (Corrected Formula)</span>
                     <span class="arrow">▼</span>
                 </div>
@@ -773,7 +780,7 @@
 
             <!-- Spectral Gap -->
             <div class="expandable-block">
-                <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                     <span class="title">Spectral Gap Δ = 0.0539677287 — The P ≠ NP Signature</span>
                     <span class="arrow">▼</span>
                 </div>
@@ -968,7 +975,7 @@
             </p>
 
             <div class="expandable-block">
-                <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                     <span class="title">Framework Validation Criteria — Click to Expand</span>
                     <span class="arrow">▼</span>
                 </div>
@@ -1267,7 +1274,7 @@
                 </div>
 
                 <div class="expandable-block" id="quantum-coherence-block">
-                    <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                         <span class="title">Quantum Coherence Evidence from IBM Quantum</span>
                         <span class="arrow">▼</span>
                     </div>
@@ -1301,7 +1308,7 @@
                 </div>
 
                 <div class="expandable-block" id="spectral-derivation-block">
-                    <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                         <span class="title">Mathematical Derivation of the Spectral Gap</span>
                         <span class="arrow">▼</span>
                     </div>
@@ -1338,7 +1345,7 @@
                 </div>
 
                 <div class="expandable-block" id="relativization-block">
-                    <div class="expandable-header" onclick="toggleExpandable(this.parentElement)">
+                    <div class="expandable-header" tabindex="0" role="button" aria-expanded="false" onclick="toggleExpandable(this.parentElement)" onkeydown="if(event.key==='Enter'||event.key===' '){toggleExpandable(this.parentElement);event.preventDefault()}">
                         <span class="title">Why D₃ May Bypass Relativization</span>
                         <span class="arrow">▼</span>
                     </div>
@@ -1388,6 +1395,11 @@
             // Expandable block toggle
             function toggleExpandable(element) {
                 element.classList.toggle('expanded');
+                const header = element.querySelector('.expandable-header');
+                if (header) {
+                    const isExpanded = element.classList.contains('expanded');
+                    header.setAttribute('aria-expanded', isExpanded.toString());
+                }
             }
 
             // Guardian card toggle
