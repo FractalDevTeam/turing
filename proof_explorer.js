@@ -1947,3 +1947,4 @@ window.addEventListener('DOMContentLoaded', () => {
     testProblems = new TestProblems();
     compareViz = new ComparisonVisualization();
 });
+
